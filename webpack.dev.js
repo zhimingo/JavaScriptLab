@@ -1,7 +1,8 @@
 'use strict';
 
+const configuration = require('./configuration');
 const path = require('path');
-const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -22,7 +23,37 @@ module.exports = {
       },
       {
         test: /\.less/,
-        use: ['style-loader', 'css-loader', 'less-loader'],
+        use: [
+          'style-loader',
+          'css-loader',
+          'less-loader',
+          {
+            // 配置详情见 https://github.com/webpack-contrib/postcss-loader
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  require('autoprefixer')({
+                    overrideBrowserslist: ['last 4 version', '>1%', 'ios 7'],
+                  }),
+                  require('postcss-px-to-viewport')({
+                    unitToConvert: 'px',
+                    viewportWidth: 375,
+                    unitPrecision: 5,
+                    propList: ['*'],
+                    viewportUnit: 'vw',
+                    fontViewportUnit: 'vw',
+                    selectorBlackList: [],
+                    minPixelValue: 1,
+                    mediaQuery: false,
+                    replace: true,
+                    exclude: [/node_modules/],
+                  }),
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         test: /.(png|jpg|gif|jpeg)$/,
@@ -30,8 +61,18 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'public/index.html'),
+      filename: 'index.html',
+      inject: true,
+    }),
+  ],
   devServer: {
-    contentBase: './dist',
+    contentBase: path.resolve(__dirname, 'public'),
+    index: 'index.html',
     hot: true,
+    stats: 'errors-only',
+    quiet: true,
   },
 };
