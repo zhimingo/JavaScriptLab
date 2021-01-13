@@ -2,7 +2,9 @@
 
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+// 压缩css文件中的css样式
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -74,19 +76,20 @@ module.exports = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    minimizer: [new CssMinimizerPlugin(), new UglifyJsPlugin()],
+  },
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name]_[contenthash:8].css',
-    }),
-    new OptimizeCSSAssetsPlugin({
-      assetNameRegExp: /\.css$/g,
-      cssProcessor: require('cssnano'),
     }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'public/index.html'),
       filename: 'index.html',
       chunks: ['index'],
       inject: true,
+      // 此处的压缩是针对Html文档内的JS以及CSS和HTML标记进行压缩
       minify: {
         html5: true,
         collapseWhitespace: true,
