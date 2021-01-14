@@ -1,12 +1,9 @@
 {
   "presets": [
     "@babel/preset-env",
-    "@babel/preset-react"
+    "@babel/preset-react",
+    "mobx"
   ],
-  "plugins": [
-    ["@babel/plugin-proposal-class-properties", {
-      "loose": true
-    }]
-  ],
+  "plugins": [],
   "compact": false
 }
