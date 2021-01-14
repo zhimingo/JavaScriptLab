@@ -1,9 +1,11 @@
-import React from 'react';
-import { observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { Component } from 'react';
+import { useLocalStore, useObserver } from 'mobx-react';
 
 const MobxExampleApp = () => {
-  return <div>MobxExampleApp</div>;
+  const person = useLocalStore(() => ({ name: 'John' }));
+  return useObserver(() => {
+    <div>{person.name}</div>;
+  });
 };
 
-export default observer(MobxExampleApp);
+export default MobxExampleApp;

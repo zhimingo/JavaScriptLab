@@ -1,7 +1,11 @@
 import { makeObservable } from 'mobx';
 
 class ToDoStore {
+  todos = [];
+
   constructor() {
-    makeObservable();
+    makeObservable(this);
   }
 }
+
+export default new ToDoStore();
