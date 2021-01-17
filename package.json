@@ -13,6 +13,7 @@
   "author": "HuangZhiMing",
   "license": "ISC",
   "dependencies": {
+    "@babel/preset-typescript": "^7.12.7",
     "less": "^4.0.0",
     "mobx": "^6.0.4",
     "mobx-react": "^7.0.5",
