@@ -10,11 +10,15 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
   },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js', '.json'],
+  },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(tsx|js|ts)$/,
         use: 'babel-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.css/,
