@@ -8,6 +8,33 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+const postCssLoaderOptions = {
+  // 配置详情见 https://github.com/webpack-contrib/postcss-loader
+  loader: 'postcss-loader',
+  options: {
+    postcssOptions: {
+      plugins: [
+        require('autoprefixer')({
+          overrideBrowserslist: ['last 4 version', '>1%', 'ios 7'],
+        }),
+        require('postcss-px-to-viewport')({
+          unitToConvert: 'px',
+          viewportWidth: 375,
+          unitPrecision: 5,
+          propList: ['*'],
+          viewportUnit: 'vw',
+          fontViewportUnit: 'vw',
+          selectorBlackList: [],
+          minPixelValue: 1,
+          mediaQuery: false,
+          replace: true,
+          exclude: [/node_modules/],
+        }),
+      ],
+    },
+  },
+};
+
 module.exports = {
   mode: 'production',
   entry: {
@@ -27,7 +54,7 @@ module.exports = {
       {
         test: /\.css/,
         // use: ['style-loader', 'css-loader'],
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', postCssLoaderOptions],
       },
       {
         test: /\.less/,
@@ -36,32 +63,16 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           'css-loader',
           'less-loader',
-          {
-            // 配置详情见 https://github.com/webpack-contrib/postcss-loader
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [
-                  require('autoprefixer')({
-                    overrideBrowserslist: ['last 4 version', '>1%', 'ios 7'],
-                  }),
-                  require('postcss-px-to-viewport')({
-                    unitToConvert: 'px',
-                    viewportWidth: 375,
-                    unitPrecision: 5,
-                    propList: ['*'],
-                    viewportUnit: 'vw',
-                    fontViewportUnit: 'vw',
-                    selectorBlackList: [],
-                    minPixelValue: 1,
-                    mediaQuery: false,
-                    replace: true,
-                    exclude: [/node_modules/],
-                  }),
-                ],
-              },
-            },
-          },
+          postCssLoaderOptions,
+        ],
+      },
+      {
+        test: /\.sass/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader',
+          postCssLoaderOptions,
         ],
       },
       {
